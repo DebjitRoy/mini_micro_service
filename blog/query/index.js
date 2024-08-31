@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const axios = require("axios");
 
 const app = express();
 
@@ -9,13 +10,7 @@ app.use(cors());
 
 const posts = {};
 
-app.get("/posts", (req, res) => {
-  res.status(200).send(posts);
-});
-app.post("/event", (req, res) => {
-  // observing event from event-bus
-  const { type, body } = req.body;
-  console.log("Query events", { type, body });
+const handleEvent = (type, body) => {
   switch (type) {
     case "createPostEvent":
       const { id, title } = body;
@@ -45,9 +40,28 @@ app.post("/event", (req, res) => {
       }
       break;
   }
-  res.send();
+};
+
+app.get("/posts", (req, res) => {
+  res.status(200).send(posts);
+});
+app.post("/event", (req, res) => {
+  // observing event from event-bus
+  const { type, body } = req.body;
+  console.log("Query events", { type, body });
+  handleEvent(type, body);
+  res.send({});
 });
 
-app.listen(4002, () => {
+app.listen(4002, async () => {
   console.log("Listening query microservice on 4002");
+  try {
+    const res = await axios.get("http://localhost:4003/event-bus/event");
+    for (let event of res.data) {
+      console.log("processing event", event.type);
+      handleEvent(event.type, event.body);
+    }
+  } catch (e) {
+    console.log(e.message);
+  }
 });
