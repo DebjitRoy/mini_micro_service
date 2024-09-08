@@ -42,12 +42,13 @@ app.post("/posts/:id/comments", (req, res) => {
     },
   };
   axios
-    .post("http://localhost:4003/event-bus/event", createCommentEvent)
+    .post("http://event-bus-srv:4003/event-bus/event", createCommentEvent)
     .catch((e) => console.log(e.message));
   res.status(201).send(comment);
 });
 app.post("/event", (req, res) => {
   // observing event from event-bus
+  console.log("event received", req.body);
   res.send();
 });
 

@@ -13,7 +13,7 @@ const posts = {};
 app.get("/posts", (req, res) => {
   res.send(posts);
 });
-app.post("/posts", (req, res) => {
+app.post("/posts/create", (req, res) => {
   const id = randomBytes(4).toString("hex");
   const { title } = req.body;
   const post = {
@@ -26,7 +26,7 @@ app.post("/posts", (req, res) => {
     body: post,
   };
   try {
-    axios.post("http://localhost:4003/event-bus/event", createPostEvent);
+    axios.post("http://event-bus-srv:4003/event-bus/event", createPostEvent);
   } catch (e) {
     console.log("inside error", e.message);
   }
@@ -34,9 +34,12 @@ app.post("/posts", (req, res) => {
 });
 app.post("/event", (req, res) => {
   // observing event from event-bus
+  const event = req.body;
+  console.log("received event", event);
   res.send();
 });
 
 app.listen(4000, () => {
+  console.log("updating version");
   console.log("Listening posts microservice on 4000");
 });

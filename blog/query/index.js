@@ -56,7 +56,7 @@ app.post("/event", (req, res) => {
 app.listen(4002, async () => {
   console.log("Listening query microservice on 4002");
   try {
-    const res = await axios.get("http://localhost:4003/event-bus/event");
+    const res = await axios.get("http://event-bus-srv:4003/event-bus/event");
     for (let event of res.data) {
       console.log("processing event", event.type);
       handleEvent(event.type, event.body);

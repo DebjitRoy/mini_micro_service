@@ -23,7 +23,7 @@ app.post("/event", (req, res) => {
       },
     };
     axios
-      .post("http://localhost:4003/event-bus/event", updateCommentEvent)
+      .post("http://event-bus-srv:4003/event-bus/event", updateCommentEvent)
       .catch((e) => console.log(e.message));
   }
   res.send();

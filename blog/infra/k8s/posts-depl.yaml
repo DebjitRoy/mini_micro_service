@@ -1,0 +1,34 @@
+# deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: posts-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: posts
+  template:
+    metadata:
+      # identifier of pod going to be created
+      labels:
+        app: posts
+    spec:
+      containers:
+        - name: posts
+          image: debjitroy86/posts
+---
+# cluster IP service
+apiVersion: v1
+kind: Service
+metadata:
+  name: posts-cluster-ip-srv
+spec:
+  selector:
+    app: posts
+  type: ClusterIP
+  ports:
+    - name: posts
+      protocol: TCP
+      port: 4000
+      targetPort: 4000

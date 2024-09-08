@@ -11,23 +11,24 @@ app.get("/event-bus/event", (req, res) => {
 });
 app.post("/event-bus/event", (req, res) => {
   const { type, body } = req.body;
-  console.log({ type, body });
+
   const event = req.body;
+  console.log("recieved event ", event);
   events.push(event);
   // post service
-  axios.post("http://localhost:4000/event", event).catch((err) => {
+  axios.post("http://posts-cluster-ip-srv:4000/event", event).catch((err) => {
     console.log(err.message);
   });
   // comment service
-  axios.post("http://localhost:4001/event", event).catch((err) => {
+  axios.post("http://comments-srv:4001/event", event).catch((err) => {
     console.log(err.message);
   });
   // query service
-  axios.post("http://localhost:4002/event", event).catch((err) => {
+  axios.post("http://query-srv:4002/event", event).catch((err) => {
     console.log(err.message);
   });
   // moderation service
-  axios.post("http://localhost:4004/event", event).catch((err) => {
+  axios.post("http://moderation-srv:4004/event", event).catch((err) => {
     console.log(err.message);
   });
   res.status(200).send({ status: "OK" });
