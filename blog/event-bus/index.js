@@ -13,7 +13,7 @@ app.post("/event-bus/event", (req, res) => {
   const { type, body } = req.body;
 
   const event = req.body;
-  console.log("recieved event ", event);
+  console.log("recieved event :", event);
   events.push(event);
   // post service
   axios.post("http://posts-cluster-ip-srv:4000/event", event).catch((err) => {
